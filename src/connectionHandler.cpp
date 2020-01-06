@@ -10,7 +10,7 @@ using std::string;
  
 ConnectionHandler::ConnectionHandler(
         string host, short port): host_(host), port_(port), io_service_(), socket_(io_service_), active(active),
-        books(books){}
+        books(books), subscriptions(subscriptions) {}
     
 ConnectionHandler::~ConnectionHandler() {
     close();

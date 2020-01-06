@@ -15,7 +15,8 @@ private:
 	tcp::socket socket_;
 	// Our fields
 	bool active;
-	std::vector<std::string> books;
+	std::map<std::string, std::vector<std::string>> books;
+	std::map<std::string, int>  subscriptions;
  
 public:
     ConnectionHandler(std::string host, short port);
