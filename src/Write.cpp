@@ -1,7 +1,3 @@
-//
-// Created by lilachzi@wincs.cs.bgu.ac.il on 05/01/2020.
-//
-
 #include <connectionHandler.h>
 #include <User.h>
 #include <Write.h>
@@ -19,6 +15,7 @@ void Write::setUser(User *newUser){
 }
 
 void Write::run() {
+        // TODO : maybe do while
         while (!connectionHandler.isActive()) {
             std::string line;
             getline(cin, line);
@@ -34,7 +31,7 @@ std::string Write::createFrame(std::string inputCommand){
         while (i != 0) {
             i = inputCommand.find_first_of(' ');
             sentence.push_back(inputCommand.substr(0, i));
-            inputCommand = inputCommand.substr(i, inputCommand.length());
+            inputCommand = inputCommand.substr(i+1, inputCommand.length());
         }
 
         if (sentence.at(0) == "login") {
@@ -45,6 +42,8 @@ std::string Write::createFrame(std::string inputCommand){
             std::string password = sentence.at(3);
             frame = "CONNECT\naccept-version:" + version + "\nhost:" + host +
                     "\nlogin:" + userName +"\npasscode:"+ password + "\n\n" + '\u0000';
+            ConnectionHandler connectionHandler1(host, stoi(port));
+            connectionHandler1.connect();
         }
         if (sentence.at(0)  == "join") {
             std::string genre = sentence.at(1);
@@ -67,7 +66,7 @@ std::string Write::createFrame(std::string inputCommand){
             std::string bookName = sentence.at(2);
             frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + "has added the book "
                     + bookName + "\n" + '\u0000';
-            user->addBook(bookName);
+            user->addBook(genre, bookName);
         }
         if (sentence.at(0)  == "borrow") {
             std::string genre = sentence.at(1);
@@ -80,6 +79,8 @@ std::string Write::createFrame(std::string inputCommand){
             std::string bookName = sentence.at(2);
             frame = "SEND\ndestination:" + genre + "\n\nReturning " + bookName + " to" +
                     user->getLoanerName(bookName) + "\n" + '\u0000';
+            user->removeBook(genre, bookName);
+            user->removeBorrow(bookName, user->getLoanerName(bookName));
         }
         if (sentence.at(0)  == "status") {
             std::string genre = sentence.at(1);
@@ -88,6 +89,7 @@ std::string Write::createFrame(std::string inputCommand){
         }
         if (sentence.at(0)  == "logout") {
             frame = "DISCONNECT\nreceipt:" + to_string(receiptId) + "\n\n" + '\u0000';
+            connectionHandler.close();
         }
         return frame;
     }

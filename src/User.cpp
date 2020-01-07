@@ -14,22 +14,22 @@ User::~User() {
 
 }
 
-void User::addBook(string bookName) {
-    books.push_back(bookName);
+void User::addBook(string genre, string bookName) {
+    books.at(genre).push_back(bookName);
 }
 
-void User::removeBook(string bookName) {
-    // TODO: maybe can't iterate on map with numbers
-    for (int i = 0 ; i < books.size() ; i++) {
-        if (books.at(i) == bookName) {
-            books.erase(books.begin() + i);
+void User::removeBook(string genre, string bookName) {
+    // TODO: check if the correct book is erased
+    for (int i = 0; i < books.at(genre).size(); i++) {
+        if (books.at(genre).at(i) == bookName) {
+            books.at(genre).erase(books.at(genre).begin()+i-1);
         }
     }
 }
 
-bool User::bookExist(string bookName) {
-    for (auto book: books) {
-        if (book == bookName) {
+bool User::bookExist(string genre, string bookName) {
+    for (int i = 0; i < books.at(genre).size(); i++) {
+        if (books.at(genre).at(i) == bookName) {
             return true;
         }
     }
@@ -77,6 +77,13 @@ void User::addReceipt(string receiptId, string message) {
 string User::getReceipt(string receiptId) {
     return receipts.at(receiptId);
 }
+
+vector<string> User::getBooks(string genre) {
+    return books.at(genre);
+
+}
+
+User::User() {}
 
 
 
