@@ -2,6 +2,7 @@
 // Created by lilachzi@wincs.cs.bgu.ac.il on 06/01/2020.
 //
 
+#include <iostream>
 #include "User.h"
 
 using namespace std;
@@ -37,7 +38,8 @@ bool User::bookExist(string genre, string bookName) {
 }
 
 void User::addBorrow(string bookName, string userName) {
-    borrowFrom.insert(bookName,userName);
+//    borrowFrom.insert(bookName, userName);
+    borrowFrom.insert(std::pair<string,string>(bookName, userName));
 }
 
 void User::removeBorrow(string bookName, string userName) {
@@ -45,7 +47,7 @@ void User::removeBorrow(string bookName, string userName) {
 }
 
 void User::addSubscription(string subsId, string genre) {
-    subscriptions.insert(subsId, genre);
+    subscriptions.insert(std::pair<string,string>(subsId, genre));
 }
 
 void User::removeSubscription(string subsId){
@@ -71,7 +73,8 @@ string User::getLoanerName(string bookName) {
 }
 
 void User::addReceipt(string receiptId, string message) {
-    receipts.insert(receiptId, message);
+
+    receipts.insert(std::pair<string, string>(receiptId, message));
 }
 
 string User::getReceipt(string receiptId) {

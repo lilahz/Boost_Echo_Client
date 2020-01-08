@@ -1,11 +1,12 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 #ifndef BOOST_ECHO_CLIENT_USER_H
 #define BOOST_ECHO_CLIENT_USER_H
 
-#endif //BOOST_ECHO_CLIENT_USER_H
+
 
 using namespace std;
 
@@ -17,6 +18,7 @@ private:
     std::map<string, string> borrowFrom; // <bookName, userName to return book to>
     std::map<string, string> subscriptions; // <subscriptionId, genre>
     std::map<string, string> receipts; // <receiptID, message>
+
 public:
     User();
     User(string userName, string password);
@@ -36,3 +38,4 @@ public:
     vector<string> getBooks(string genre);
 };
 
+#endif

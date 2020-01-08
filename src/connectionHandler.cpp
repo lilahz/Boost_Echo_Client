@@ -23,6 +23,8 @@ bool ConnectionHandler::connect() {
 		tcp::endpoint endpoint(boost::asio::ip::address::from_string(host_), port_); // the server endpoint
 		boost::system::error_code error;
 		socket_.connect(endpoint, error);
+
+		setActive();
 		if (error)
 			throw boost::system::system_error(error);
     }
@@ -67,8 +69,8 @@ bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
 }
  
 bool ConnectionHandler::getLine(std::string& line) {
-    return getFrameAscii(line, '\n');
-}
+    return getFrameAscii(line, '\0');
+} //TODO i fucking changed the delimter
 
 bool ConnectionHandler::sendLine(std::string& line) {
     return sendFrameAscii(line, '\n');

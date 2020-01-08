@@ -13,8 +13,8 @@ void Read::setUser(User *newUser){
     user = newUser;
 }
 
-void Read::run() {
-    while (!connectionHandler.isActive()){
+void Read::operator()() {
+    while (connectionHandler.isActive()){
         std::string line;
         connectionHandler.getLine(line);
         react(line);
@@ -24,18 +24,20 @@ void Read::run() {
 void Read::react(std::string line) {
     int i = 1;
     std::vector<string> frame;
-    while (i != 0) {
+    while (i != -1) {
         i = line.find_first_of('\n');
         frame.push_back(line.substr(0, i));
-        line = line.substr(i, line.length());
+        line = line.substr(i+1, line.length());
     }
-    if (frame.at(0) == "CONNECTED") {
+    if (frame.at(0) ==  "CONNECTED") {
         cout << "Login successful" << endl;
     }
     if (frame.at(0) == "RECEIPT") {
         string receiptId = frame.at(1);
         int i = receiptId.find_first_of(':');
-        cout << user->getReceipt(receiptId.substr(i, receiptId.size())) << endl;
+        string receiptIDString = receiptId.substr(i+1 , receiptId.size());
+        cout << user->getReceipt(receiptIDString) << endl;
+        //TODO: Disconnect
     }
     if (frame.at(0) == "MESSAGE") {
         string genre = frame.at(3);
@@ -52,7 +54,7 @@ void Read::react(std::string line) {
         std::string errorMsg = frame.at(1);
         int i = errorMsg.find_first_of(':');
         cout << errorMsg.substr(i, errorMsg.size()) << endl;
-        connectionHandler.close(); //TODO : do we need to close?
+        connectionHandler.close(); //TODO : do we need to close? what should happen to the user?
     }
 
 }
@@ -89,13 +91,6 @@ void Read::messageReact(string subscription, string genre, string message) {
         string borrowFrom = msg.at(3);
         user->removeBook(genre, bookName);
     }
-    // Return flow
-//    if ((msg.at(0) == "Returning") & (subscription == user->getSubscriptionId(genre))) {
-//        string bookName = msg.at(1);
-//        string borrowFrom = msg.at(msg.size()-1);
-//        user->removeBook(genre, bookName);
-//        user->removeBorrow(bookName, borrowFrom);
-//    }
     if ((msg.at(0) == "Returning") & (msg.at(msg.size()-1) == user->getName())) {
         string bookName = msg.at(1);
         user->addBook(genre, bookName);

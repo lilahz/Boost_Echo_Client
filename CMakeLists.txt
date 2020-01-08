@@ -4,6 +4,7 @@ project(Boost_Echo_Client)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
+link_libraries("-lboost_system -pthread")
 
 add_executable(Boost_Echo_Client
         include/connectionHandler.h
