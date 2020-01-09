@@ -17,6 +17,6 @@ public:
     Write(ConnectionHandler &connectionHandler);
     virtual ~Write();
     void operator()();
-    std::string createFrame(std::string inputCommand);
+    string createFrame(string inputCommand);
     void  setUser(User *newUser);
 };

@@ -18,6 +18,7 @@ private:
     std::map<string, string> borrowFrom; // <bookName, userName to return book to>
     std::map<string, string> subscriptions; // <subscriptionId, genre>
     std::map<string, string> receipts; // <receiptID, message>
+    std::vector<string> wishBooks;
 
 public:
     User();
@@ -35,7 +36,10 @@ public:
     string getLoanerName(string bookName);
     void addReceipt(string receiptId, string message);
     string getReceipt(string receiptId);
-    vector<string> getBooks(string genre);
+    vector<string>* getBooks(string genre);
+    void addToWishList(string bookName);
+    bool findInWishList(string bookName);
+    void removeFromWishList(string bookName);
 };
 
 #endif

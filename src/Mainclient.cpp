@@ -44,8 +44,6 @@ int main (int argc, char *argv[]){
     std::thread thWrite((std::thread(threadWrite)));
     std::thread thRead((std::thread(threadRead)));
 
-
-
     thRead.join();
     thWrite.join();
 

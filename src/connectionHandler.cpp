@@ -23,8 +23,6 @@ bool ConnectionHandler::connect() {
 		tcp::endpoint endpoint(boost::asio::ip::address::from_string(host_), port_); // the server endpoint
 		boost::system::error_code error;
 		socket_.connect(endpoint, error);
-
-		setActive();
 		if (error)
 			throw boost::system::system_error(error);
     }
@@ -108,6 +106,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string& frame, char delimiter)
 void ConnectionHandler::close() {
     try{
         socket_.close();
+        active = false; // TODO : check if its the right place.
     } catch (...) {
         std::cout << "closing failed: connection already closed" << std::endl;
     }

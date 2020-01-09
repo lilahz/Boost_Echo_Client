@@ -15,7 +15,7 @@ public:
     void setUser(User *user);
     void operator()();
     void react(std::string line);
-    void messageReact(string subscription, string genre, string message);
+    void messageReact(string genre, string message);
 };
 
 

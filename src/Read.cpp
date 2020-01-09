@@ -37,18 +37,19 @@ void Read::react(std::string line) {
         int i = receiptId.find_first_of(':');
         string receiptIDString = receiptId.substr(i+1 , receiptId.size());
         cout << user->getReceipt(receiptIDString) << endl;
-        //TODO: Disconnect
+        if (user->getReceipt(receiptIDString) == "Disconnect")
+            connectionHandler.close();
     }
     if (frame.at(0) == "MESSAGE") {
         string genre = frame.at(3);
         int i = genre.find_first_of(":");
-        genre = genre.substr(i, genre.size());
+        genre = genre.substr(i+1, genre.size());
         string subscription = frame.at(1);
         int j = subscription.find_first_of(":");
-        subscription = subscription.substr(j, subscription.size());
+        subscription = subscription.substr(j+1, subscription.size());
         // TODO: make sure its in the 5th place
         string msg = frame.at(5);
-        messageReact(subscription, genre, msg);
+        messageReact(genre, msg);
     }
     if (frame.at(0) == "ERROR") {
         std::string errorMsg = frame.at(1);
@@ -56,13 +57,12 @@ void Read::react(std::string line) {
         cout << errorMsg.substr(i, errorMsg.size()) << endl;
         connectionHandler.close(); //TODO : do we need to close? what should happen to the user?
     }
-
 }
 
-void Read::messageReact(string subscription, string genre, string message) {
+void Read::messageReact(string genre, string message) {
     std::vector<string> msg;
     int i = 1;
-    while (i != 0) {
+    while (i != -1) {
         i = message.find_first_of(" ");
         msg.push_back(message.substr(0, i));
         message = message.substr(i+1, message.length());
@@ -76,12 +76,12 @@ void Read::messageReact(string subscription, string genre, string message) {
             connectionHandler.sendLine(frame);
         }
     }
-    // TODO: check if possible to remove userName from cond
-    if ((msg.at(1) == "has") & (msg.at(0) != user->getName()) & (subscription == user->getSubscriptionId(genre))) {
+    if ((msg.at(1) == "has") & (user->findInWishList(msg.at(2)))) {
         string bookName = msg.at(2);
         string borrowFrom = msg.at(0);
         user->addBook(genre, bookName);
         user->addBorrow(bookName, borrowFrom);
+        user->removeFromWishList(bookName);
         string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking " + bookName + " from " +
                 borrowFrom + "\n" + '\u0000';
         connectionHandler.sendLine(frame);
@@ -98,8 +98,8 @@ void Read::messageReact(string subscription, string genre, string message) {
     // Status flow
     if (msg.at(1) == "status") {
         string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + ":";
-        vector<string> books = user->getBooks(genre);
-        for (auto book: books) {
+        vector<string>* books = user->getBooks(genre);
+        for (auto book: (*books)) {
             frame = frame + book + ",";
         }
         frame = frame + "\n" + '\u0000';
