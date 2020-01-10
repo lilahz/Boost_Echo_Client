@@ -12,10 +12,12 @@ User::User(string userName, string password): userName(userName), password(passw
 }
 
 User::~User() {
-
+    books.clear();
+    borrowFrom.clear();
+    subscriptions.clear();
+    receipts.clear();
+    wishBooks.clear();
 }
-
-User::User() {}
 
 void User::addBook(string genre, string bookName) {
     if (books.find(genre) == books.end()) {
@@ -31,7 +33,7 @@ void User::removeBook(string genre, string bookName) {
     // TODO: check if the correct book is erased
     for (int i = 0; i < books.at(genre).size(); i++) {
         if (books.at(genre).at(i) == bookName) {
-            books.at(genre).erase(books.at(genre).begin()+i-1);
+            books.at(genre).erase(books.at(genre).begin() + i);
         }
     }
 }
@@ -111,11 +113,11 @@ bool User::findInWishList(string bookName) {
 }
 
 void User::removeFromWishList(string bookName) {
-    for (auto it = wishBooks.begin(); it != wishBooks.end(); it++){
-        if (*it == bookName)
-            wishBooks.erase(it);
+    for (int i = 0; i < wishBooks.size(); i++) {
+        if (wishBooks.at(i) == bookName) {
+            wishBooks.erase (wishBooks.begin() + i);
+        }
     }
-
 }
 
 

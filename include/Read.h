@@ -2,6 +2,7 @@
 #define BOOST_ECHO_CLIENT_READ_H
 
 
+#include <mutex>
 #include "connectionHandler.h"
 
 class Read {
@@ -9,8 +10,10 @@ class Read {
 private:
     ConnectionHandler &connectionHandler;
     User *user;
+    std::mutex& mutex;
+    std::condition_variable& conditionVariable;
 public:
-    Read(ConnectionHandler &connectionHandler);
+    Read(ConnectionHandler &connectionHandler, std::mutex& mutex, condition_variable& conditionVariable);
     virtual ~Read();
     void setUser(User *user);
     void operator()();

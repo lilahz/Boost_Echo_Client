@@ -55,6 +55,7 @@ bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
 	boost::system::error_code error;
     try {
         while (!error && bytesToWrite > tmp ) {
+
 			tmp += socket_.write_some(boost::asio::buffer(bytes + tmp, bytesToWrite - tmp), error);
         }
 		if(error)
@@ -68,7 +69,7 @@ bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
  
 bool ConnectionHandler::getLine(std::string& line) {
     return getFrameAscii(line, '\0');
-} //TODO i fucking changed the delimter
+}
 
 bool ConnectionHandler::sendLine(std::string& line) {
     return sendFrameAscii(line, '\n');

@@ -21,7 +21,6 @@ private:
     std::vector<string> wishBooks;
 
 public:
-    User();
     User(string userName, string password);
     ~User();
     void addBook(string genre, string bookName);

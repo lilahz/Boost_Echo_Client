@@ -1,3 +1,5 @@
+#include <mutex>
+#include <condition_variable>
 #include "connectionHandler.h"
 #include "User.h"
 
@@ -13,8 +15,10 @@ private:
     User *user;
     int subscriptionID;
     int receiptId;
+    std::mutex& mutex;
+    std::condition_variable& conditionVariable;
 public:
-    Write(ConnectionHandler &connectionHandler);
+    Write(ConnectionHandler &connectionHandler, std::mutex& mutex, std::condition_variable& conditionVariable);
     virtual ~Write();
     void operator()();
     string createFrame(string inputCommand);
