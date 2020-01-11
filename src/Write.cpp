@@ -63,11 +63,13 @@ std::string Write::createFrame(std::string inputCommand){
         else if (sentence.at(0) == "exit") {
             std::string genre = sentence.at(1);
             std::string subscriptionIDString = user->getSubscriptionId(genre);
-            frame = "UNSUBSCRIBE\nid:" + subscriptionIDString + "\nreceipt-id:" +
-                    to_string(receiptId) + "\n\n" + '\u0000';
-            user->removeSubscription(subscriptionIDString);
-            user->addReceipt(to_string(receiptId), "Exited club " + genre);
-            receiptId++;
+            if (subscriptionIDString != "") {
+                frame = "UNSUBSCRIBE\nid:" + subscriptionIDString + "\nreceipt-id:" +
+                        to_string(receiptId) + "\n\n" + '\u0000';
+                user->removeSubscription(subscriptionIDString);
+                user->addReceipt(to_string(receiptId), "Exited club " + genre);
+                receiptId++;
+            }
         }
         else if (sentence.at(0)  == "add") {
             std::string genre = sentence.at(1);
