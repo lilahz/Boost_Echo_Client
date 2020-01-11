@@ -30,7 +30,7 @@ void User::addBook(string genre, string bookName) {
 
 void User::removeBook(string genre, string bookName) {
     // TODO: check if the correct book is erased
-    for (int i = 0; i < books.at(genre).size(); i++) {
+    for (unsigned int i = 0; i < books.at(genre).size(); i++) {
         if (books.at(genre).at(i) == bookName) {
             books.at(genre).erase(books.at(genre).begin() + i);
         }
@@ -38,7 +38,7 @@ void User::removeBook(string genre, string bookName) {
 }
 
 bool User::bookExist(string genre, string bookName) {
-    for (int i = 0; i < books.at(genre).size(); i++) {
+    for (unsigned int i = 0; i < books.at(genre).size(); i++) {
         if (books.at(genre).at(i) == bookName) {
             return true;
         }
@@ -112,7 +112,7 @@ bool User::findInWishList(string bookName) {
 }
 
 void User::removeFromWishList(string bookName) {
-    for (int i = 0; i < wishBooks.size(); i++) {
+    for (unsigned int i = 0; i < wishBooks.size(); i++) {
         if (wishBooks.at(i) == bookName) {
             wishBooks.erase (wishBooks.begin() + i);
         }

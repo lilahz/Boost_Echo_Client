@@ -12,13 +12,13 @@ class ConnectionHandler {
 private:
 	const std::string host_;
 	const short port_;
+    std::mutex& syncMutex;
 	boost::asio::io_service io_service_;   // Provides core I/O functionality
 	tcp::socket socket_;
 	// Our fields
 	bool active;
 	std::map<std::string, std::vector<std::string>> books;
 	std::map<std::string, int>  subscriptions;
-	std::mutex& syncMutex;
 
 public:
     ConnectionHandler(std::string host, short port, std::mutex& syncMutex);

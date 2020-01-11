@@ -11,8 +11,8 @@ using std::string;
 
 ConnectionHandler::ConnectionHandler(
         string host, short port, std::mutex &syncMutex) : host_(host), port_(port), syncMutex(syncMutex), io_service_(),
-                                                          socket_(io_service_), active(false), books(books),
-                                                          subscriptions(subscriptions) {}
+                                                          socket_(io_service_), active(false), books(),
+                                                          subscriptions() {}
 
 ConnectionHandler::~ConnectionHandler() {
     close();
@@ -73,7 +73,6 @@ bool ConnectionHandler::getLine(std::string &line) {
 }
 
 bool ConnectionHandler::sendLine(std::string &line) {
-    bool output;
     return sendFrameAscii(line, '\n');
 }
 

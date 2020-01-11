@@ -9,6 +9,15 @@ Write::Write(ConnectionHandler &connectionHandler, std::mutex& mutex, std::condi
     connectionHandler(connectionHandler), mutex(mutex), conditionVariable(conditionVariable), version("1.2"), user(),
     subscriptionID(0), receiptId(0) {}
 
+Write::Write(const Write &other) : connectionHandler(other.connectionHandler), mutex(other.mutex), conditionVariable(other.conditionVariable), version("1.2"), user(other.user),
+                                   subscriptionID(0), receiptId(0) {}
+
+Write &Write::operator=(const Write &other) {
+    if (this != &other){
+        user=other.user;
+    }
+    return *this;
+}
 
 Write::~Write() {
 
@@ -31,14 +40,14 @@ void Write::operator()() {
         // if line contains logout, wait until receipt is received
         // when it received the wait will finish and we will exit the loop
         // lock
-        if (line.find("logout") != -1) {
+        if (signed(line.find("logout")) != (-1)) {
             conditionVariable.wait(uniqueLock);
         }
     }
 }
 
 std::string Write::createFrame(std::string inputCommand){
-        int i = 1;
+        signed int i = 1;
         std::vector<string> sentence;
         std::string frame;
         while (i != -1) {
@@ -78,7 +87,7 @@ std::string Write::createFrame(std::string inputCommand){
         else if (sentence.at(0)  == "add") {
             std::string genre = sentence.at(1);
             std::string bookName;
-            for (int i = 2; i < sentence.size(); i++) {
+            for (unsigned int i = 2; i < sentence.size(); i++) {
                 bookName += sentence.at(i) + " ";
             }
             bookName = bookName.substr(0, bookName.size()-1);
@@ -89,7 +98,7 @@ std::string Write::createFrame(std::string inputCommand){
         else if (sentence.at(0)  == "borrow") {
             std::string genre = sentence.at(1);
             std::string bookName;
-            for (int i = 2; i < sentence.size(); i++) {
+            for (unsigned int i = 2; i < sentence.size(); i++) {
                 bookName += sentence.at(i) + " ";
             }
             bookName = bookName.substr(0, bookName.size()-1);
@@ -100,7 +109,7 @@ std::string Write::createFrame(std::string inputCommand){
         else if (sentence.at(0)  == "return") {
             std::string genre = sentence.at(1);
             std::string bookName;
-            for (int i = 2; i < sentence.size(); i++) {
+            for (unsigned int i = 2; i < sentence.size(); i++) {
                 bookName += sentence.at(i) + " ";
             }
             bookName = bookName.substr(0, bookName.size()-1);

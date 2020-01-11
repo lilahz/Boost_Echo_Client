@@ -5,7 +5,16 @@
 using namespace std;
 
 Read::Read(ConnectionHandler &connectionHandler, std::mutex& mutex, std::condition_variable& conditionVariable) :
-    connectionHandler(connectionHandler), mutex(mutex), conditionVariable(conditionVariable) {}
+    connectionHandler(connectionHandler), user(), mutex(mutex), conditionVariable(conditionVariable) {}
+
+Read::Read(const Read &other) : connectionHandler(other.connectionHandler), user(other.user), mutex(other.mutex), conditionVariable(other.conditionVariable) {}
+
+Read &Read::operator=(const Read &other) {
+    if (this != &other){
+       user=other.user;
+    }
+    return *this;
+}
 
 Read::~Read() {
 
@@ -51,7 +60,7 @@ void Read::react(std::string line) {
         }
     }
     if (frame.at(0) == "MESSAGE") {
-        for (int i = 0 ; i < frame.size(); i++){
+        for (unsigned int i = 0 ; i < frame.size(); i++){
            cout << frame.at(i) << endl;
         }
         string genre = frame.at(3);
@@ -85,9 +94,9 @@ void Read::messageReact(string genre, string message) {
         message = message.substr(i+1, message.length());
     }
     // Borrow flow
-    if (originalMessage.find("borrow") != -1) {
+    if (signed (originalMessage.find("borrow")) != -1) {
         std::string bookName;
-        for (int i = 4; i < msg.size(); i++) {
+        for (unsigned int i = 4; i < msg.size(); i++) {
             bookName += msg.at(i) + " ";
         }
         bookName = bookName.substr(0, bookName.size()-1);
@@ -97,9 +106,9 @@ void Read::messageReact(string genre, string message) {
             connectionHandler.sendLine(frame);
         }
     }
-    if (originalMessage.find("has") != -1) {
+    if (signed (originalMessage.find("has")) != -1) {
         std::string bookName;
-        for (int i = 2; i < msg.size(); i++) {
+        for (unsigned int i = 2; i < msg.size(); i++) {
             bookName += msg.at(i) + " ";
         }
         bookName = bookName.substr(0, bookName.size()-1);
@@ -113,7 +122,7 @@ void Read::messageReact(string genre, string message) {
             connectionHandler.sendLine(frame);
         }
     }
-    if ((originalMessage.find("Taking") != -1 ) && (msg.at(msg.size()-1) == user->getName())) {
+    if (signed (originalMessage.find("Taking")) != -1 && (msg.at(msg.size()-1) == user->getName())) {
         int spaceIndex = originalMessage.find_first_of(" ");
         int fromIndex = originalMessage.find("from");
         std::string bookName = originalMessage.substr(spaceIndex+1, fromIndex-spaceIndex-2);
@@ -127,7 +136,7 @@ void Read::messageReact(string genre, string message) {
         user->addBook(genre, bookName);
     }
     // Status flow
-    if (originalMessage.find("status") != -1) {
+    if (signed (originalMessage.find("status")) != -1) {
         string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + ":";
         vector<string>* books = user->getBooks(genre);
         // TODO: make the list of books without spaces
