@@ -18,7 +18,6 @@ void Write::setUser(User *newUser){
 }
 
 void Write::operator()() {
-
     // if we received ERROR frame in the first login command
     std::unique_lock<std::mutex> uniqueLock(mutex);
     conditionVariable.wait(uniqueLock);
@@ -33,7 +32,6 @@ void Write::operator()() {
         // when it received the wait will finish and we will exit the loop
         // lock
         if (line.find("logout") != -1) {
-            std::unique_lock<std::mutex> uniqueLock(mutex);
             conditionVariable.wait(uniqueLock);
         }
     }

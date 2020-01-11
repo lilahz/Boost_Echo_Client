@@ -7,6 +7,7 @@
 
 int main (int argc, char *argv[]){
     std::mutex mutex;
+    std::mutex syncMutex;
     std::condition_variable conditionVariable;
 
     std::string waitForLogin;
@@ -34,7 +35,7 @@ int main (int argc, char *argv[]){
     std::string password = sentence.at(3);
     frame = "CONNECT\naccept-version:1.2\nhost:" + host +
             "\nlogin:" + userName +"\npasscode:"+ password + "\n\n" + '\u0000';
-    ConnectionHandler connectionHandler1(host, stoi(port));
+    ConnectionHandler connectionHandler1(host, stoi(port), syncMutex);
     connectionHandler1.connect();
     User* newUser = new User(userName, password);
 

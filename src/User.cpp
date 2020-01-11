@@ -7,9 +7,8 @@
 
 using namespace std;
 
-User::User(string userName, string password): userName(userName), password(password), books(), borrowFrom(), subscriptions(), receipts(), wishBooks() {
-
-}
+User::User(string userName, string password): userName(userName), password(password), books(), borrowFrom(),
+    subscriptions(), receipts(), wishBooks() {}
 
 User::~User() {
     books.clear();
