@@ -18,11 +18,17 @@ void Write::setUser(User *newUser){
 }
 
 void Write::operator()() {
+
+    // if we received ERROR frame in the first login command
+    std::unique_lock<std::mutex> uniqueLock(mutex);
+    conditionVariable.wait(uniqueLock);
+
     while (connectionHandler.isActive()) {
         std::string line;
         getline(cin, line);
         std::string frame = createFrame(line);
-        connectionHandler.sendLine(frame);
+        if (frame != "")
+            connectionHandler.sendLine(frame);
         // if line contains logout, wait until receipt is received
         // when it received the wait will finish and we will exit the loop
         // lock

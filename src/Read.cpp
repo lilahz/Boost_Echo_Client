@@ -33,6 +33,10 @@ void Read::react(std::string line) {
     }
     if (frame.at(0) ==  "CONNECTED") {
         cout << "Login successful" << endl;
+
+        // Release lock since we connected successfully
+        std::unique_lock<std::mutex> uniqueLock(mutex);
+        conditionVariable.notify_all();
     }
     if (frame.at(0) == "RECEIPT") {
         string receiptId = frame.at(1);
@@ -63,8 +67,11 @@ void Read::react(std::string line) {
         std::string errorMsg = frame.at(1);
         int i = errorMsg.find_first_of(':');
         cout << errorMsg.substr(i+2, errorMsg.size()) << endl;
-        connectionHandler.close(); //TODO : do we need to close? what should happen to the user?
+        connectionHandler.close();
         delete(user);
+
+        std::unique_lock<std::mutex> uniqueLock(mutex);
+        conditionVariable.notify_all();
     }
 }
 
