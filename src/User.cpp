@@ -7,7 +7,7 @@
 
 using namespace std;
 
-User::User(string userName, string password): userName(userName), password(password), books(), borrowFrom(),
+User::User(string userName, string password): userName(userName), password(password), active(), books(), borrowFrom(),
     subscriptions(), receipts(), wishBooks() {}
 
 User::~User() {
@@ -53,6 +53,15 @@ void User::addBorrow(string bookName, string userName) {
 
 void User::removeBorrow(string bookName, string userName) {
     borrowFrom.erase(bookName);
+}
+
+bool User::findInBorrow(string bookName) {
+    for (unsigned int i = 0; i < borrowFrom.size(); i++) {
+        if (books.find(bookName) != books.end()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void User::addSubscription(string subsId, string genre) {
@@ -118,6 +127,16 @@ void User::removeFromWishList(string bookName) {
         }
     }
 }
+
+bool User::isActive() {
+    return active;
+}
+
+void User::setActive(bool active) {
+    this->active = active;
+}
+
+
 
 
 

@@ -55,7 +55,7 @@ std::string Write::createFrame(std::string inputCommand){
             sentence.push_back(inputCommand.substr(0, i));
             inputCommand = inputCommand.substr(i+1, inputCommand.length());
         }
-        if (sentence.at(0) == "login"){
+        if ((sentence.at(0) == "login") & (!user->isActive())){
             std::string host = sentence.at(1).substr(0,i);
             std::string port = sentence.at(1).substr(i+1,sentence.at(1).size());
             std::string userName = sentence.at(2);
@@ -113,7 +113,7 @@ std::string Write::createFrame(std::string inputCommand){
                 bookName += sentence.at(i) + " ";
             }
             bookName = bookName.substr(0, bookName.size()-1);
-            if (user->bookExist(genre, bookName)) {
+            if (user->bookExist(genre, bookName) & (user->findInBorrow(bookName))) {
                 frame = "SEND\ndestination:" + genre + "\n\nReturning " + bookName + " to " +
                         user->getLoanerName(bookName) + "\n" + '\u0000';
                 user->removeBook(genre, bookName);

@@ -42,7 +42,7 @@ void Read::react(std::string line) {
     }
     if (frame.at(0) ==  "CONNECTED") {
         cout << "Login successful" << endl;
-
+        user->setActive(true);
         // Release lock since we connected successfully
         std::unique_lock<std::mutex> uniqueLock(mutex);
         conditionVariable.notify_all();
@@ -57,6 +57,7 @@ void Read::react(std::string line) {
             // release lock
             std::unique_lock<std::mutex> uniqueLock(mutex);
             conditionVariable.notify_all();
+            delete(user);
         }
     }
     if (frame.at(0) == "MESSAGE") {
@@ -143,7 +144,7 @@ void Read::messageReact(string genre, string message) {
         for (auto book: (*books)) {
             frame = frame + book + ",";
         }
-        frame = frame + "\n" + '\u0000';
+        frame = frame.substr(0, frame.size()-1) + "\n" + '\u0000';
         connectionHandler.sendLine(frame);
     }
 }

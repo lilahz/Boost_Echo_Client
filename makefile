@@ -3,10 +3,10 @@ LDFLAGS:=-lboost_system
 CFLAGS += -pthread
 LDFLAGS += -pthread
 
-all: MainClient
+all: StompBookClubClient
 
-MainClient: bin/connectionHandler.o bin/MainClient.o bin/Read.o bin/User.o bin/Write.o
-	g++ -o bin/MainClient bin/connectionHandler.o bin/MainClient.o bin/Read.o bin/User.o bin/Write.o $(LDFLAGS)
+StompBookClubClient: bin/connectionHandler.o bin/MainClient.o bin/Read.o bin/User.o bin/Write.o
+	g++ -o bin/StompBookClubClient bin/connectionHandler.o bin/MainClient.o bin/Read.o bin/User.o bin/Write.o $(LDFLAGS)
 
 bin/connectionHandler.o: src/connectionHandler.cpp include/connectionHandler.h
 	g++ $(CFLAGS) -o bin/connectionHandler.o src/connectionHandler.cpp

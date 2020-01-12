@@ -73,6 +73,7 @@ bool ConnectionHandler::getLine(std::string &line) {
 }
 
 bool ConnectionHandler::sendLine(std::string &line) {
+    std::lock_guard<std::mutex> lock(syncMutex);
     return sendFrameAscii(line, '\n');
 }
 
