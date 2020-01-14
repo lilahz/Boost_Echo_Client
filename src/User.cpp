@@ -29,7 +29,6 @@ void User::addBook(string genre, string bookName) {
 }
 
 void User::removeBook(string genre, string bookName) {
-    // TODO: check if the correct book is erased
     for (unsigned int i = 0; i < books.at(genre).size(); i++) {
         if (books.at(genre).at(i) == bookName) {
             books.at(genre).erase(books.at(genre).begin() + i);

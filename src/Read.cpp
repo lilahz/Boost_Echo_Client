@@ -103,7 +103,7 @@ void Read::messageReact(string genre, string message) {
         bookName = bookName.substr(0, bookName.size()-1);
         if (user->bookExist(genre, bookName)) {
             string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + " has " + bookName
-                           + "\n" + '\u0000';
+                           + "\n";
             connectionHandler.sendLine(frame);
         }
     }
@@ -119,7 +119,7 @@ void Read::messageReact(string genre, string message) {
             user->addBorrow(bookName, borrowFrom);
             user->removeFromWishList(bookName);
             string frame = "SEND\ndestination:" + genre + "\n\n" + "Taking " + bookName + " from " +
-                           borrowFrom + "\n" + '\u0000';
+                           borrowFrom + "\n";
             connectionHandler.sendLine(frame);
         }
     }
@@ -140,11 +140,10 @@ void Read::messageReact(string genre, string message) {
     if (signed (originalMessage.find("status")) != -1) {
         string frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + ":";
         vector<string>* books = user->getBooks(genre);
-        // TODO: make the list of books without spaces
         for (auto book: (*books)) {
             frame = frame + book + ",";
         }
-        frame = frame.substr(0, frame.size()-1) + "\n" + '\u0000';
+        frame = frame.substr(0, frame.size()-1) + "\n";
         connectionHandler.sendLine(frame);
     }
 }

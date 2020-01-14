@@ -61,14 +61,14 @@ std::string Write::createFrame(std::string inputCommand){
             std::string userName = sentence.at(2);
             std::string password = sentence.at(3);
             frame = "CONNECT\naccept-version:1.2\nhost:" + host +
-                    "\nlogin:" + userName +"\npasscode:"+ password + "\n\n" + '\u0000';
+                    "\nlogin:" + userName +"\npasscode:"+ password + "\n\n";
         }
 
         else if (sentence.at(0)  == "join") {
             std::string genre = sentence.at(1);
             std::string subscriptionIDString = to_string(subscriptionID);
             frame = "SUBSCRIBE\ndestination:" + genre + "\nid:" + subscriptionIDString +
-                    "\nreceipt:" + to_string(receiptId) + "\n\n" + '\u0000';
+                    "\nreceipt:" + to_string(receiptId) + "\n\n";
             user->addSubscription(subscriptionIDString, genre);
             user->addReceipt(to_string(receiptId), "joined club " + genre);
             subscriptionID++ , receiptId++;
@@ -78,7 +78,7 @@ std::string Write::createFrame(std::string inputCommand){
             std::string subscriptionIDString = user->getSubscriptionId(genre);
             if (subscriptionIDString != "") {
                 frame = "UNSUBSCRIBE\nid:" + subscriptionIDString + "\nreceipt-id:" +
-                        to_string(receiptId) + "\n\n" + '\u0000';
+                        to_string(receiptId) + "\n\n";
                 user->removeSubscription(subscriptionIDString);
                 user->addReceipt(to_string(receiptId), "Exited club " + genre);
                 receiptId++;
@@ -92,7 +92,7 @@ std::string Write::createFrame(std::string inputCommand){
             }
             bookName = bookName.substr(0, bookName.size()-1);
             frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + " has added the book "
-                    + bookName + "\n" + '\u0000';
+                    + bookName + "\n";
             user->addBook(genre, bookName);
         }
         else if (sentence.at(0)  == "borrow") {
@@ -103,7 +103,7 @@ std::string Write::createFrame(std::string inputCommand){
             }
             bookName = bookName.substr(0, bookName.size()-1);
             frame = "SEND\ndestination:" + genre + "\n\n" + user->getName() + " wish to borrow "
-                    + bookName + "\n" + '\u0000';
+                    + bookName + "\n";
             user->addToWishList(bookName);
         }
         else if (sentence.at(0)  == "return") {
@@ -115,7 +115,7 @@ std::string Write::createFrame(std::string inputCommand){
             bookName = bookName.substr(0, bookName.size()-1);
             if (user->bookExist(genre, bookName) & (user->findInBorrow(bookName))) {
                 frame = "SEND\ndestination:" + genre + "\n\nReturning " + bookName + " to " +
-                        user->getLoanerName(bookName) + "\n" + '\u0000';
+                        user->getLoanerName(bookName) + "\n";
                 user->removeBook(genre, bookName);
                 user->removeBorrow(bookName, user->getLoanerName(bookName));
             }
@@ -126,7 +126,7 @@ std::string Write::createFrame(std::string inputCommand){
               + "\n" + '\u0000';
         }
         else if (sentence.at(0)  == "logout") {
-            frame = "DISCONNECT\nreceipt:" + to_string(receiptId) + "\n\n" + '\u0000';
+            frame = "DISCONNECT\nreceipt:" + to_string(receiptId) + "\n\n";
             user->addReceipt(to_string(receiptId),"Disconnect");
         }
         return frame;

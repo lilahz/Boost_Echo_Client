@@ -74,7 +74,7 @@ bool ConnectionHandler::getLine(std::string &line) {
 
 bool ConnectionHandler::sendLine(std::string &line) {
     std::lock_guard<std::mutex> lock(syncMutex);
-    return sendFrameAscii(line, '\n');
+    return sendFrameAscii(line, '\0');
 }
 
 
@@ -108,7 +108,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
 void ConnectionHandler::close() {
     try {
         socket_.close();
-        active = false; // TODO : check if its the right place.
+        active = false;
     } catch (...) {
         std::cout << "closing failed: connection already closed" << std::endl;
     }
